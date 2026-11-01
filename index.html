@@ -6,6 +6,11 @@
 <title>光亮时刻 · 可交互原型</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%23FFF3E0'/%3E%3Ccircle cx='32' cy='30' r='10' fill='%23E8935A'/%3E%3Cpath d='M32 44c0 6-5 10-11 11' stroke='%23E8935A' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
 <meta name="theme-color" content="#FDF9F3">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://jin085953-jpg.github.io/guangliang-moment/">
+<meta property="og:title" content="光亮时刻 · 让每一个「想变好」的瞬间都被自己看见">
+<meta property="og:description" content="面向大学生的自我成长陪伴服务：今日微光、解忧罐、陪伴对话、心情趋势。所有数据只存在你自己的设备上。">
+<meta property="og:image" content="https://jin085953-jpg.github.io/guangliang-moment/og-image.png">
 <style>
 :root{
   --bg:#FDF9F3; --card:#FFFFFF; --ink:#4A3C2E; --sub:#6E5B45; --muted:#7F6B53;
@@ -30,8 +35,7 @@ body{
 .side .tagline{display:inline-block; margin-bottom:14px; font-size:11px; letter-spacing:2px; color:#B08A5E;}
 
 :focus-visible{outline:2px solid var(--brand); outline-offset:2px; border-radius:6px;}
-@media (prefers-reduced-motion: reduce){
-  *{animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important;}
+@media (prefers-reduced-motion: reduce){  *{animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important;}
   .b-circle{transform:none !important;}
 }
 .device{position:relative; width:397px; height:834px; background:#2E2A26; border-radius:52px;
@@ -100,7 +104,7 @@ body{
 .tl-item:before{content:""; position:absolute; left:-17px; top:5px; width:8px;height:8px;border-radius:50%;
   background:#fff; border:2px solid var(--brand2);}
 .tl-item .tm{font-size:11.5px; color:var(--brand); font-weight:800;}
-.tl-item .tx{font-size:12.5px; line-height:1.65; margin-top:3px;}
+.tl-item .tx{font-size:12.5px; line-height:1.65; margin-top:3px; overflow-wrap:anywhere;}
 .tl-item .tx-edit{cursor:text; border-bottom:1px dashed transparent;}
 .tl-item .tx-edit:hover{border-bottom-color:#E6D3B8;}
 .tl-item .del{position:absolute; right:-6px; top:-10px; font-size:12px; padding:9px 8px; color:var(--muted); opacity:.5;
@@ -123,7 +127,7 @@ body{
 .chat-head{display:flex; align-items:center; gap:10px; padding:4px 0 12px; border-bottom:1px solid var(--line);}
 .chat-head .avatar{width:40px;height:40px;font-size:18px;}
 .chat-body{display:flex; flex-direction:column; gap:11px; padding:14px 0; min-height:340px;}
-.msg{max-width:80%; padding:11px 14px; font-size:13px; line-height:1.65; animation:pop .22s ease;}
+.msg{max-width:80%; padding:11px 14px; font-size:13px; line-height:1.65; overflow-wrap:anywhere; animation:pop .22s ease;}
 .msg.bot{background:#fff; border-radius:5px 17px 17px 17px; box-shadow:0 3px 10px rgba(160,130,90,.09); align-self:flex-start;}
 .msg.me{background:linear-gradient(135deg,var(--brand2),var(--brand)); color:#fff;
   border-radius:17px 5px 17px 17px; align-self:flex-end; box-shadow:0 4px 12px rgba(232,147,90,.28);}
@@ -324,7 +328,7 @@ body{
 .step-add{display:flex; align-items:center; gap:6px; margin-top:12px; font-size:12px; color:var(--brand); cursor:pointer;}
 .jar-item{padding:12px 0; border-top:1px dashed var(--line);}
 .jar-item:first-child{border-top:none;}
-.jar-txt{font-size:13px; line-height:1.72; color:var(--text);}
+.jar-txt{font-size:13px; line-height:1.72; color:var(--text); overflow-wrap:anywhere;}
 .jar-item.done .jar-txt{color:var(--muted);}
 .jar-meta{display:flex; align-items:center; justify-content:space-between; margin-top:7px;
   font-size:10.5px; color:var(--muted);}
@@ -396,7 +400,7 @@ body{
     <div class="sheet" id="sheet">
       <h3 id="sheetTitle">添加</h3>
       <p id="sheetHint"></p>
-      <textarea id="sheetInput" placeholder="写点什么…"></textarea>
+      <textarea id="sheetInput" maxlength="500" placeholder="写点什么…"></textarea>
       <label class="sheet-priv" id="sheetPrivRow"><input type="checkbox" id="sheetPriv"> 设为私密 · 仅自己可见，不用于优势发现</label>
       <div class="row">
         <button class="btn ghost" id="sheetCancel">取消</button>
@@ -430,7 +434,10 @@ body{
 const KEY = 'guangliang_v2';
 const MOODS = [{e:'😄',l:'开心'},{e:'🙂',l:'还好'},{e:'😌',l:'平静'},{e:'😔',l:'低落'},{e:'😫',l:'疲惫'}];
 const AVATARS = ['🌱','🌻','🌙','⭐','🐣','🍊'];
-const todayStr = () => new Date().toISOString().slice(0,10);
+const pad2 = n => String(n).padStart(2, '0');
+const localDate = (dt = new Date()) => dt.getFullYear() + '-' + pad2(dt.getMonth() + 1) + '-' + pad2(dt.getDate());
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const todayStr = () => localDate();
 
 /* 计划拆分：把「一直想学」拆成三个小到不好意思不做的步骤 */
 const STEP_TPL = [
@@ -488,7 +495,7 @@ function demoUser() {
   ];
   u.records = u.records.map(r => Object.assign({}, r));
   u.activeDays = Array.from({length:12}, (_,i) => {
-    const d = new Date(); d.setDate(d.getDate() - i); return d.toISOString().slice(0,10);
+    const d = new Date(); d.setDate(d.getDate() - i); return localDate(d);
   });
   u.records = [
     {id:11,time:'今天',text:'吉他和弦练习 20 分钟，C→G 换得越来越顺了',tag:'小成就'},
@@ -500,7 +507,7 @@ function demoUser() {
   /* 示例账号的 7 天心情：有起伏才看得出「能量节律」 */
   [2, 1, 4, 3, 2, 0, 2].forEach((m, i) => {
     const d = new Date(); d.setDate(d.getDate() - (6 - i));
-    u.moodHistory[d.toISOString().slice(0, 10)] = m;
+    u.moodHistory[localDate(d)] = m;
   });
   u.moodIdx = 2; u.moodToday = true;
   u.chats = [
@@ -671,7 +678,7 @@ function renderOb() {
       <div class="ob-body">
         <div class="ob-q">怎么称呼你？</div>
         <div class="ob-hint">只有你自己能看到这个名字，它只存在这台设备上。</div>
-        <input class="ob-input" id="obName" maxlength="10" placeholder="输入你的名字或昵称" value="${OB.name}">
+        <input class="ob-input" id="obName" maxlength="10" placeholder="输入你的名字或昵称" value="${esc(OB.name)}">
         <div class="ob-hint" style="margin-top:18px;">选一个头像</div>
         <div class="ob-avatars">${AVATARS.map(a => `<div class="ob-av ${OB.avatar===a?'on':''}" data-av="${a}">${a}</div>`).join('')}</div>
       </div>
@@ -744,7 +751,7 @@ function streakOf(u) {
   const set = new Set(u.activeDays);
   const d = new Date(); let n = 0;
   for (let i = 0; i < 500; i++) {
-    if (!set.has(d.toISOString().slice(0, 10))) break;
+    if (!set.has(localDate(d))) break;
     n++; d.setDate(d.getDate() - 1);
   }
   return n;
@@ -810,7 +817,7 @@ function microLight(u) {
   const why = [
     m !== null ? `今天的心情是「${MOODS[m].l}」`
       : (lows ? `最近 ${lows} 天偏低落，今天还没记心情` : '今天还没记心情'),
-    gap === null ? `「${w.title}」还没正式开始过`
+    gap === null ? `「${esc(w.title)}」还没正式开始过`
       : (gap >= 14 ? `「${w.title}」已经 ${gap} 天没动过，先接回来比做完更要紧`
         : (gap > 0 ? `「${w.title}」已经 ${gap} 天没动过` : `「${w.title}」今天动过一点`)),
     `所以给你 ${conf.min} 分钟`
@@ -822,7 +829,7 @@ function microLight(u) {
 
 /* 情绪趋势：7 天 / 30 天可切；缺记录的日子断开不连线；点圆点补记那天 */
 let TREND_RANGE = 7;
-function dayKey(dt) { return dt.toISOString().slice(0, 10); }
+function dayKey(dt) { return localDate(dt); }
 function moodSeries(u, n) {
   const hist = (u && u.moodHistory) || {};
   const out = [];
@@ -974,7 +981,7 @@ function renderHome() {
   } else {
     micro = `<div class="title-s">✨ 今日微光 · ${ml.min} 分钟</div>
       <div style="font-size:12.5px; color:var(--sub); line-height:1.75; margin-top:7px;">
-        ${ml.tone}。「${ml.w.title}」${ml.next ? `下一步是「${ml.next.t}」` : '还停在那里'}，${ml.min} 分钟就够。</div>
+        ${ml.tone}。「${esc(ml.w.title)}」${ml.next ? `下一步是「${esc(ml.next.t)}」` : '还停在那里'}，${ml.min} 分钟就够。</div>
       <div class="why">${ml.why}</div>
       <button class="btn" style="width:132px; padding:9px 0; font-size:12.5px; margin-top:12px;" data-act="wish-open" data-wish-open="${ml.w.id}">就做这一步</button>`;
   }
@@ -992,7 +999,7 @@ function renderHome() {
   $('#page-home').innerHTML = `
     <div class="greet">
       <div>
-        <div class="h1">${greetWord()}，${u.name} 🌤</div>
+        <div class="h1">${greetWord()}，${esc(u.name)} 🌤</div>
         <div class="sub" style="margin-top:4px">${u.moodToday ? '今天的情绪已经记下了，谢谢你愿意说出来' : (u.records.length ? '今天也是光亮的一天' : '第一次来，慢慢来就好')}</div>
       </div>
       <div class="avatar">${u.avatar}</div>
@@ -1031,7 +1038,7 @@ function renderHome() {
     ${RESUME ? `<div class="card resume-card">
       <div class="title-s">🌤 上次你${RESUME.kind === 'chat' ? '说到' : '记过'}</div>
       <div class="sub" style="margin-top:5px; font-size:12.5px; color:#6E5B45; line-height:1.7;">
-        「${RESUME.text.slice(0, 30)}${RESUME.text.length > 30 ? '…' : ''}」后来怎么样了？</div>
+        「${esc(RESUME.text.slice(0, 30))}${RESUME.text.length > 30 ? '…' : ''}」后来怎么样了？</div>
       <div style="display:flex; gap:8px; margin-top:11px;">
         <button class="btn" style="flex:1; padding:10px 0; font-size:12.5px;" data-act="resume-chat">接着说</button>
         <button class="btn ghost" style="flex:0 0 92px; padding:10px 0; font-size:12.5px;" data-act="resume-off">先不看</button>
@@ -1083,7 +1090,7 @@ function wishListHtml(u, q) {
     <div class="wish" data-wish="${w.id}">
       <div class="ico">${w.icon}</div>
       <div class="info">
-        <div class="t">${w.title}</div>
+        <div class="t">${esc(w.title)}</div>
         <div class="n">${n}</div>
         <div class="bar"><i style="width:${pct}%"></i></div>
       </div>
@@ -1101,16 +1108,16 @@ function recListHtml(u, q) {
   const hits = q ? u.records.filter(r => qHit(r.text, q) || qHit(r.tag, q)) : u.records.slice(0, 10);
   if (!hits.length) {
     return `<div class="empty" style="padding:14px 0;"><div class="ico">🔍</div>
-      <div class="t">没有找到「${q}」</div>
+      <div class="t">没有找到「${esc(q)}」</div>
       <div class="d">可能是还没记过，也可能用了别的说法。<br>试试更短的词，比如「练琴」「作业」。</div></div>`;
   }
-  const cnt = q ? `<div class="search-cnt">找到 <b>${hits.length}</b> 条包含「${q}」的记录</div>` : '';
+  const cnt = q ? `<div class="search-cnt">找到 <b>${hits.length}</b> 条包含「${esc(q)}」的记录</div>` : '';
   return cnt + hits.map(r => `
     <div class="tl-item">
       <div class="tm">${r.time}</div>
       <span class="del" data-del="${r.id}" role="button" aria-label="删除这条记录">✕</span>
       <div class="tx"><span class="tx-edit" data-edit-rec="${r.id}" role="button" tabindex="0"
-        aria-label="编辑这条记录">${r.text}</span>${r.priv ? '<span class="badge priv">🔒 仅自己</span>' : ''}${r.tag ? `<span class="badge ${r.tag==='情绪'?'mood':r.tag==='发现'?'find':''}">${({'情绪':'🌙 情绪','发现':'★ 发现','小成就':'✓ 小成就'})[r.tag] || r.tag}</span>` : ''}</div>
+        aria-label="编辑这条记录">${esc(r.text)}</span>${r.priv ? '<span class="badge priv">🔒 仅自己</span>' : ''}${r.tag ? `<span class="badge ${r.tag==='情绪'?'mood':r.tag==='发现'?'find':''}">${({'情绪':'🌙 情绪','发现':'★ 发现','小成就':'✓ 小成就'})[r.tag] || r.tag}</span>` : ''}</div>
     </div>`).join('');
 }
 
@@ -1123,7 +1130,7 @@ function renderRecords() {
 
     <div class="search-wrap">
       <span class="search-ico" aria-hidden="true">🔍</span>
-      <input id="recSearch" class="search" type="search" value="${q}"
+      <input id="recSearch" class="search" type="search" value="${esc(q)}"
         placeholder="搜索记录、清单、步骤里的词" aria-label="搜索我的记录">
       ${q ? '<span class="search-clear" id="searchClear" role="button" aria-label="清空搜索">✕</span>' : ''}
     </div>
@@ -1202,7 +1209,7 @@ function openJarPanel() {
   const doneN = u.jar.filter(j => j.done).length;
   const list = u.jar.length ? u.jar.slice().sort((a, b) => b.id - a.id).map(j => `
     <div class="jar-item ${j.done ? 'done' : ''}">
-      <div class="jar-txt">${j.text}</div>
+      <div class="jar-txt">${esc(j.text)}</div>
       <div class="jar-meta">
         <span>${j.at}${j.done ? ' · 已经过去了' : ' · 封存中'}</span>
         <span class="ops">
@@ -1367,8 +1374,8 @@ function renderChat() {
   const u = U();
   if (!u.chats.length) u.chats.push({me:false, text:`你好，${u.name}。我是光光，你的陪伴伙伴。今天想聊点什么？`});
   const msgs = u.chats.map(c => c.me
-    ? `<div class="msg me">${c.text}</div>`
-    : (c.jar ? `<div class="msg jar">🫙 <b>解忧罐</b>：${c.text}</div>`
+    ? `<div class="msg me">${esc(c.text)}</div>`
+    : (c.jar ? `<div class="msg jar">🫙 <b>解忧罐</b>：${esc(c.text)}</div>`
       : c.help ? `<div class="msg help">
           <div class="ht">如果现在很难撑住</div>
           <div class="hd">有些时候需要的不是一个人陪着，而是一个能立刻接住你的人。下面这些是免费的、24 小时的。</div>
@@ -1376,7 +1383,7 @@ function renderChat() {
           <a href="tel:01082951332">📞 010-82951332 · 北京心理危机干预中心</a>
           <div class="hs">也可以联系学校心理中心，或者让身边的人陪你去。不需要先说服自己「够严重」才去求助。</div>
         </div>`
-      : `<div class="msg bot">${c.text}</div>`)).join('');
+      : `<div class="msg bot">${esc(c.text)}</div>`)).join('');
   $('#page-chat').innerHTML = `
     <div class="chat-head">
       <div class="avatar">🕯</div>
@@ -1391,7 +1398,7 @@ function renderChat() {
       <span class="chip ghost" data-act="help">🫂 我需要帮助</span>
     </div>
     <div class="inputbar">
-      <input id="chatInput" placeholder="说点什么…" autocomplete="off" aria-label="对光光说点什么">
+      <input id="chatInput" maxlength="300" placeholder="说点什么…" autocomplete="off" aria-label="对光光说点什么">
       <button class="send" id="chatSend">➤</button>
     </div>`;
   $('#chatBody').scrollTop = $('#chatBody').scrollHeight;
@@ -1466,8 +1473,8 @@ function replyLearning(text) {
   const w = pending.slice().sort((a, b) => (a.lastAt || 0) - (b.lastAt || 0))[0];
   const nx = (w.steps || []).find(s => !s.done);
   return pickNew([
-    `你的「${w.title}」到 ${wishPct(w)}% 了${nx ? `，下一步是「${nx.t}」` : ''}。今天想碰它一下吗？十分钟也算数，不想碰也没关系。`,
-    `还记着「${w.title}」这件事呢。是卡住了，还是最近先顾别的了？`
+    `你的「${esc(w.title)}」到 ${wishPct(w)}% 了${nx ? `，下一步是「${esc(nx.t)}」` : ''}。今天想碰它一下吗？十分钟也算数，不想碰也没关系。`,
+    `还记着「${esc(w.title)}」这件事呢。是卡住了，还是最近先顾别的了？`
   ]);
 }
 
@@ -1498,15 +1505,15 @@ function reply(text) {
   if (/？$/.test(lastBotText(u)) && text.length <= 26) {
     return pickNew([
       `「${text}」——好，我记着这句了。`,
-      `嗯，${text.length > 14 ? text.slice(0, 14) + '…' : text}。那你现在更想先被听见，还是想一起想想办法？`
+      `嗯，${text.length > 14 ? esc(text.slice(0, 14)) + '…' : esc(text)}。那你现在更想先被听见，还是想一起想想办法？`
     ]);
   }
   /* 诚实接不住时，引用用户自己的记录，保持「在场」而不假装听懂 */
   const last = u.records.filter(x => !x.priv)[0];
   if (last && Math.random() < 0.5)
     return pick([
-      `刚看到你之前记的那句「${last.text.slice(0, 16)}${last.text.length > 16 ? '…' : ''}」。现在说这些的时候，你也在想那件事吗？`,
-      `我不太确定怎么接这句话，但我还在。你之前记录过「${last.text.slice(0, 14)}…」，这件事现在怎么样了？`
+      `刚看到你之前记的那句「${esc(last.text.slice(0, 16))}${last.text.length > 16 ? '…' : ''}」。现在说这些的时候，你也在想那件事吗？`,
+      `我不太确定怎么接这句话，但我还在。你之前记录过「${esc(last.text.slice(0, 14))}…」，这件事现在怎么样了？`
     ]);
   return pickNew([
     '我在听，你继续说。',
@@ -1560,7 +1567,7 @@ function renderProfile() {
     <div class="profile-top">
       <div class="avatar">${u.avatar}</div>
       <div>
-        <div class="title-s" style="font-size:15px">${u.name}</div>
+        <div class="title-s" style="font-size:15px">${esc(u.name)}</div>
         <div class="tagline-s">Lv.${lv.lv} · ${lv.name}</div>
       </div>
     </div>
@@ -1985,7 +1992,7 @@ document.addEventListener('click', e => {
     const list = DB.users.map((x, i) =>
       `<div class="user-row" data-user="${i}">
          <div class="av">${x.avatar}</div>
-         <div style="flex:1"><div class="nm">${x.name}${i===DB.cur?'（当前）':''}</div>
+         <div style="flex:1"><div class="nm">${esc(x.name)}${i===DB.cur?'（当前）':''}</div>
            <div class="mt">${x.records.length} 条记录 · ${x.activeDays.length} 天打卡</div></div>
          ${i===DB.cur ? '<div class="ok">使用中</div>' : '<div class="link">切换</div>'}
        </div>`).join('');
