@@ -12,7 +12,7 @@
 
 ## 在线体验
 
-打开 `https://jin085953.github.io/guangliang-moment/` 即可，无需注册。
+打开 `https://jin085953-jpg.github.io/guangliang-moment/` 即可，无需注册。
 
 - 首次进入可以点「先看看示例账号」，也可以自己起名字开始
 - 建议用手机浏览器打开，体验更接近真实产品形态
