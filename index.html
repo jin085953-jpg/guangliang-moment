@@ -364,7 +364,7 @@ body{
 <div class="device">
   <div class="notch"></div>
   <div class="screen">
-    <div class="statusbar"><span>9:41</span><span class="right">●●● ◗ ▮</span></div>
+    <div class="statusbar"><span id="clock">9:41</span><span class="right">●●● ◗ ▮</span></div>
 
     <div class="pages">
       <section class="page" id="page-home"></section>
@@ -1626,6 +1626,7 @@ function go(tab) {
 }
 function paint(dir = 0) {
   if (!DB.users.length) { showOb(); return; }
+  tickClock();
   RENDER[curTab]();
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   const pg = $('#page-' + curTab);
@@ -1635,6 +1636,16 @@ function paint(dir = 0) {
   document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === curTab));
   pg.scrollTop = 0;
 }
+
+/* 状态栏时钟：跟随真实时间，与问候语保持一致 */
+function tickClock() {
+  const el = $('#clock');
+  if (!el) return;
+  const d = new Date();
+  el.textContent = d.getHours() + ':' + String(d.getMinutes()).padStart(2, '0');
+}
+setInterval(tickClock, 30000);
+tickClock();
 
 /* ===================== 记录分析 ===================== */
 function analyze(text) {
